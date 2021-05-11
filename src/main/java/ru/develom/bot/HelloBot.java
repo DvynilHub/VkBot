@@ -11,18 +11,49 @@ import api.longpoll.bots.model.objects.basic.Message;
 import java.util.Date;
 
 public class HelloBot extends LongPollBot {
+
+   FuncService fs = new FuncService();
+
+
     @Override
     public void onMessageNew(MessageNewEvent messageNewEvent) {
         try {
             Message message = messageNewEvent.getMessage();
             Date date = new Date();
-            if (message.getText().toUpperCase().equals("ВРЕМЯ")) {
-                String response =  "на часиках " + date.toString() +" твой ид "+ message.getFromId()+ " хз чей ид "+ message.getPeerId();
+            String rasp = "расп";
+            String response = null;
+            if (message.getText().toUpperCase().equals("!РАСП")) {
+                if(fs.chatHasGroup(message.getPeerId().toString())){
+                    response = "PayLoad " + message.getPayload() + " Action " + message.getAction() + " Important " + message.getImportant();
+                } else{
+                    new MessagesSend(getAccessToken())
+                            .setPeerId(message.getPeerId())
+                            .setMessage("Введите название группы")
+                            .execute();
+                }
+
                 new MessagesSend(getAccessToken())
                         .setPeerId(message.getPeerId())
                         .setMessage(response)
                         .execute();
+            } else if (message.getText().toUpperCase().equals("!ГРУППА*")){
+                String groupid = fs.getGroupIdByName(message.getText());
+                //добавить в бд
+                new MessagesSend(getAccessToken())
+                        .setPeerId(message.getPeerId())
+                        .setMessage("Введите вариант оповещений")
+                        .execute();
+            } else if (message.getText().toUpperCase().equals("!МОД*")){
+                int mode = Integer.parseInt(message.getText());
+                //добавить мод в бд
+                //если мод кастом, спросить подробности
+            } else {
+                new MessagesSend(getAccessToken())
+                        .setPeerId(message.getPeerId())
+                        .setMessage("8====D")
+                        .execute();
             }
+
         } catch (BotsLongPollAPIException | BotsLongPollException e) {
             e.printStackTrace();
         }
