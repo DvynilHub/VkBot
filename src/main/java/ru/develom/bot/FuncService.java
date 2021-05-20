@@ -60,8 +60,8 @@ public class FuncService {
      * @param idChat
      * @return
      */
-    public boolean chatHasGroup(String idChat){
-        if (idChat.equals("200000000")){//проверяем в бд в таблице группы-чаты. Если есть совпадение(ид конфы записан), то true
+    public boolean chatHasGroup(int idChat){
+        if (idChat == 123){//проверяем в бд в таблице группы-чаты. Если есть совпадение(ид конфы записан), то true
             return true;
         } else return false;
     }
